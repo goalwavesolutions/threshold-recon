@@ -73,3 +73,57 @@ content-type handling.
 
 **Why deferred:** Caught by automated test coverage, so functionally low-risk; just needs
 a human eye on the rendered UI states.
+
+---
+
+## 4. Split Connect vs Billing revenue streams
+
+**Current:** All Internal `transaction_categories` are reconciled together into one set
+of recon rows. The brief calls out that Threshold runs *two* Stripe products with
+different economics — **Stripe Connect** (embedded payments / merchant settlement to
+property owners) and **Stripe Billing** (SaaS subscription invoicing) — and that "fee
+structure differences between the two products" is one of the drivers of mismatch.
+
+**Improvement:** Tag each `transaction_category` in the mapping with a `revenue_stream`
+field (`connect` | `billing`), then surface a per-stream view alongside the unified
+recon — Triage cards split into Connect / Billing columns, Type breakdown gains a
+stream filter, and the JE preview (item 5 below) emits separate debit/credit lines per
+stream. This is a prerequisite to any clean JE: Connect payments hit a different GL
+account (merchant clearing / Stripe payable) than Billing subscription revenue, and
+mixing them in one entry would make the AR/clearing reconciliation harder downstream.
+
+**Effort:** Medium. New field on the mapping config, ~2 lines per cat to tag, then a
+sidecar view in Recon View / Triage / Summary. The recon math doesn't change — only
+how we slice the rows for presentation.
+
+**Why deferred:** The matching engine and exception logic are stream-agnostic; the
+split is a presentation + JE-preparation concern that's cleaner to layer on once the
+core recon is locked.
+
+---
+
+## 5. Auto-generate the JE in a standardised import format
+
+**Current:** The downloaded workbook is the audit/working-paper artifact. The journal
+entry itself is still prepared manually by the controller from that artifact.
+
+**Improvement:** Add a "JE Proposal" sheet (or separate CSV) to the output that emits
+the period's journal entry in a **NetSuite-importable format** — one row per debit/credit
+line with the GL account number, amount, memo, and (for Connect) the per-merchant
+subsidiary/department dimension. Driven by:
+- The mapping's `Type` field re-keyed to JE/GL accounts (item 1 above)
+- The Connect/Billing split (item 4 above)
+- The reconciled rows (with overrides + corrections applied)
+
+This closes the loop from raw Stripe activity → reconciled view → posted JE in one
+flow, which is the brief's stated end goal ("from raw data ingestion through to a
+closed and reconciled ledger").
+
+**Effort:** Medium-high. The mechanical part (writing rows in NetSuite's import schema)
+is straightforward; the harder part is encoding the GL-account mapping rules
+(which `Type` × `revenue_stream` combination posts to which account, and which sign
+convention the GL expects).
+
+**Why deferred:** Requires items 1 and 4 first, plus access to Threshold's actual
+NetSuite chart of accounts to confirm the import schema. Worth scoping during a working
+session with the AP/AR team rather than building blind.
