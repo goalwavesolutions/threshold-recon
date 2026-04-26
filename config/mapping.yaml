@@ -1,0 +1,137 @@
+cat_columns:
+- billing
+- billing_instant
+- client_invoice
+- cx_transfer
+- in_app
+- other
+- payroll
+- connect
+- subscription_silver
+- subscription_diamond
+- subscription_lite_and_cobranded
+- subscription_tax
+rollup_categories_excluded:
+- total_subscription
+- subscription_cycle_monthly
+- subscription_cycle_yearly
+rc_mapping:
+  charge:
+    type: Gross activity
+    ref: 1.1
+    src: B
+  refund:
+    type: Gross activity
+    ref: 1.2
+    src: B
+  refund_failure:
+    type: Gross activity
+    ref: 1.3
+    src: B
+  dispute_gross:
+    type: Gross activity
+    ref: 1.4
+    src: I
+    composite_parent_stripe: dispute
+    description: "Gross principal of disputes/chargebacks (Internal split \u2014 Stripe\
+      \ nets into 'dispute' rc)."
+  dispute_reversal_gross:
+    type: Gross activity
+    ref: 1.5
+    src: I
+    composite_parent_stripe: dispute_reversal
+    description: "Gross principal of dispute reversals (Internal split \u2014 Stripe\
+      \ nets into 'dispute_reversal' rc)."
+  network_cost:
+    type: Gross activity
+    ref: 1.6
+    src: B
+  dispute_fee:
+    type: Fees
+    ref: 2.2
+    src: I
+    composite_parent_stripe: dispute
+    description: "Stripe fee on disputes (Internal split \u2014 Stripe reports in\
+      \ col E of 'dispute' row)."
+  dispute_reversal_fee:
+    type: Fees
+    ref: 2.3
+    src: I
+    composite_parent_stripe: dispute_reversal
+    description: "Stripe fee on dispute reversals (Internal split \u2014 Stripe reports\
+      \ in col E of 'dispute_reversal' row)."
+  fee:
+    type: Fees
+    ref: 2.5
+    src: B
+  transfer:
+    type: Cash movements
+    ref: 3.1
+    src: B
+  transfer_reversal:
+    type: Cash movements
+    ref: 3.2
+    src: B
+  connect_collection_transfer:
+    type: Cash movements
+    ref: 3.3
+    src: B
+  platform_earning:
+    type: Platform earnings
+    ref: 4.1
+    src: B
+  platform_earning_refund:
+    type: Platform earnings
+    ref: 4.2
+    src: B
+  revenue_share:
+    type: Platform earnings
+    ref: 4.3
+    src: B
+  dispute:
+    type: Disputes (composite)
+    ref: 5.1
+    src: S
+    composite_components_internal:
+    - dispute_gross
+    - dispute_fee
+  dispute_reversal:
+    type: Disputes (composite)
+    ref: 5.2
+    src: S
+    composite_components_internal:
+    - dispute_reversal_gross
+    - dispute_reversal_fee
+  other_adjustment:
+    type: Adjustments
+    ref: 6.1
+    src: S
+  payout_minimum_balance_hold:
+    type: Reserve mechanics
+    ref: 7.1
+    src: S
+  payout_minimum_balance_release:
+    type: Reserve mechanics
+    ref: 7.2
+    src: S
+  subscription_tax:
+    type: Tax
+    ref: 8.1
+    src: I
+    internal_only: true
+    values_are_subcategories: true
+    description: Subscription sales tax collected (Internal-only category, no Stripe
+      rc counterpart).
+  loyalty_credit:
+    type: Adjustments
+    ref: 1.7
+    src: I
+    internal_only: true
+synthetic_fee_rcs:
+  charge_fee:
+    parent_rc: charge
+    conceptual_ref: 2.1
+  fee_fee:
+    parent_rc: fee
+    conceptual_ref: 2.4
+tie_tolerance: 1.0
