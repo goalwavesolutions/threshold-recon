@@ -103,6 +103,17 @@ Edit it directly, or use the **Mapping Editor** tab in the app (data-editor view
 back to the YAML on click). New rcs discovered at runtime show up as `UNMAPPED` exceptions
 and can be mapped in-place from the editor.
 
+## Resetting / rebaselining
+
+To clear all persisted runs and start fresh — useful before a clean demo or when
+handing off to a new user:
+
+- **In-app**: open the **History** tab → expand the "⚠ Reset" panel → type `RESET` → click "Clear all history".
+- **CLI**: `python3 scripts/reset.py` from the project root.
+
+Both wipe `data/inputs/`, `data/outputs/`, and `manifest.json`. Mapping config is
+NOT reset — use the **Mapping Editor**'s delete panel for that.
+
 ## Versioning / history
 
 Every upload is stored under `data/inputs/<period>_v<N>_stripe_<filename>` and

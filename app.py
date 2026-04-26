@@ -137,6 +137,37 @@ def _persist_new_rule(rc: str, rule: RcRule, mapping: Mapping) -> Mapping:
     return new_mapping
 
 
+def _reset_app_state() -> tuple[int, int]:
+    """Wipe persisted runs (input + output files + manifest) and clear session state.
+
+    Returns (n_input_files_deleted, n_output_files_deleted). Mapping config is NOT
+    reset — use the Mapping Editor's delete UI for that.
+    """
+    n_in = n_out = 0
+    for d, counter_name in ((Path("data/inputs"), "in"), (Path("data/outputs"), "out")):
+        if not d.exists():
+            continue
+        for f in d.iterdir():
+            if f.name == ".gitkeep":
+                continue
+            try:
+                f.unlink()
+                if counter_name == "in":
+                    n_in += 1
+                else:
+                    n_out += 1
+            except OSError:
+                pass
+    # Reset session state to first-launch defaults
+    st.session_state.current_result = None
+    st.session_state.current_reference = None
+    st.session_state.overrides = {}
+    st.session_state.corrections = []
+    st.session_state.flow_step_idx = 0
+    st.session_state.page = "Upload & Run"
+    return n_in, n_out
+
+
 # --- Sidebar -----------------------------------------------------------------
 with st.sidebar:
     st.markdown("### Recon flow")
@@ -871,6 +902,22 @@ elif page == "Mapping Editor":
 
 elif page == "History":
     st.subheader("Run history")
+
+    # --- Reset / rebaseline ---------------------------------------------------
+    with st.expander("⚠ Reset — clear all history (rebaseline for a clean demo)", expanded=False):
+        st.caption(
+            "Deletes every persisted run (input files, output xlsx + CSV, manifest) and "
+            "clears the current session state. Mapping config is NOT reset — use the "
+            "Mapping Editor's delete panel for that. Use this before a clean demo or "
+            "to hand off a fresh state to another user."
+        )
+        confirm = st.text_input("Type **RESET** to confirm (case-sensitive)", key="reset_confirm")
+        if st.button("🗑 Clear all history", type="primary", disabled=(confirm != "RESET")):
+            n_in, n_out = _reset_app_state()
+            st.success(f"Cleared {n_in} input file(s) and {n_out} output file(s). Session reset.")
+            st.rerun()
+
+    st.divider()
     entries = manifest.list_entries()
     if not entries:
         st.info("No runs yet. Upload a workbook from the Upload page.")
