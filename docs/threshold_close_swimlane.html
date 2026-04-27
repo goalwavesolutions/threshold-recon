@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Threshold close — five-day target state</title>
+<title>Threshold revenue reconciliation — five-day target state</title>
 <style>
 :root {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -59,7 +59,6 @@ html, body {
 .tx-cell li { margin-bottom: 4px; }
 .tx-cell li:last-child { margin-bottom: 0; }
 .tx-cell .tx-role { font-weight: 500; }
-.tx-emph { font-weight: 500; }
 .tx-systems { background: #E6F1FB; color: #0C447C; }
 .tx-ai { background: #EEEDFE; color: #3C3489; }
 .tx-human { background: #FAEEDA; color: #633806; }
@@ -69,10 +68,7 @@ html, body {
 .tx-legend { display: flex; gap: 18px; margin-top: 18px; font-size: clamp(11px, 0.85vw, 13px); color: var(--color-text-secondary); flex-wrap: wrap; }
 .tx-leg-item { display: flex; align-items: center; gap: 6px; }
 .tx-leg-dot { width: 10px; height: 10px; border-radius: 2px; }
-.tx-foot { font-size: clamp(11px, 0.85vw, 13px); color: var(--color-text-tertiary); margin-top: 14px; line-height: 1.6; }
-.tx-foot p { margin: 0 0 6px; }
-.tx-foot p:last-child { margin-bottom: 0; }
-.tx-foot-label { font-weight: 500; color: var(--color-text-secondary); }
+.tx-foot { font-size: clamp(11px, 0.85vw, 13px); color: var(--color-text-tertiary); margin-top: 14px; line-height: 1.6; font-style: italic; }
 
 @media (prefers-color-scheme: dark) {
   .tx-systems { background: #0C447C; color: #B5D4F4; }
@@ -89,41 +85,41 @@ html, body {
 
 <div class="tx-wrap">
 <div class="tx-meta">
-<p class="tx-title">Threshold close &mdash; five-day target state</p>
-<p class="tx-sub">Subledger architecture; integrated stack: NetSuite, Numeric, Stripe, Ramp, Hex</p>
+<p class="tx-title">Threshold revenue reconciliation &mdash; five-day target state</p>
+<p class="tx-sub">Subledger architecture; integrated stack: NetSuite, Numeric, Stripe, Hex</p>
 </div>
 
 <div class="tx-grid">
 <div></div>
 <div class="tx-col-h">Pre-close<span class="tx-col-h-sub">Live data ingest</span></div>
-<div class="tx-col-h">Day 1<span class="tx-col-h-sub">Cutoff, lock &amp; cash</span></div>
+<div class="tx-col-h">Day 1<span class="tx-col-h-sub">Cutoff &amp; subledger lock</span></div>
 <div class="tx-col-h">Day 2<span class="tx-col-h-sub">Auto-post; flux opens</span></div>
-<div class="tx-col-h">Day 3<span class="tx-col-h-sub">Review queue &amp; CFS</span></div>
-<div class="tx-col-h">Day 4<span class="tx-col-h-sub">BS recs finalise</span></div>
+<div class="tx-col-h">Day 3<span class="tx-col-h-sub">Numeric review queue</span></div>
+<div class="tx-col-h">Day 4<span class="tx-col-h-sub">Revenue BS recs</span></div>
 <div class="tx-col-h">Day 5<span class="tx-col-h-sub">Lock &amp; sign-off</span></div>
 
 <div class="tx-lane-label tx-systems">Systems</div>
-<div class="tx-cell tx-cell-systems"><ul><li>Daily ingest: Stripe + platform DB &rarr; revenue subledger; Ramp &rarr; GL feeds</li><li>Live MTD revenue and spend view</li><li>Auto-flag unmatched invoice &harr; payment; spend anomalies</li><li>Clean dataset to Hex for analytics</li></ul></div>
-<div class="tx-cell tx-cell-systems"><ul><li>Cutoff after review of closing month&rsquo;s data</li><li>Exceptions documented; estimates proposed for revenue and expense gaps</li><li><span class="tx-emph">Bank rec complete; cash position finalised</span></li><li>Subledger locked; JEs created systemically</li><li>Initial expense accrual JEs prepared</li></ul></div>
-<div class="tx-cell tx-cell-systems"><ul><li>Source JEs auto-post to NetSuite (post sign-off)</li><li>Estimate and accrual JEs reviewed and posted</li><li>Full P&amp;L flux review opens (MoM, vs F/B)</li></ul></div>
-<div class="tx-cell tx-cell-systems"><ul><li>Remaining accrual JEs posted</li><li>Numeric pulls posted JEs for review</li><li>Flux-driven JEs prepped and posted by EOD</li><li>Cash flow statement derived from posted GL</li></ul></div>
-<div class="tx-cell tx-cell-systems"><ul><li>Balance flux documentation finalised</li><li>BS commentary and reconciliations completed in Numeric</li></ul></div>
-<div class="tx-cell tx-cell-systems"><ul><li>Period locked</li><li>Workpapers archived</li></ul></div>
+<div class="tx-cell tx-cell-systems"><ul><li>Daily ingest: Stripe + platform DB &rarr; revenue subledger</li><li>Live MTD revenue view</li><li>Auto-flag unmatched invoice &harr; payment</li><li>Clean dataset to Hex for revenue analytics</li></ul></div>
+<div class="tx-cell tx-cell-systems"><ul><li>Cutoff after review of closing month&rsquo;s revenue data</li><li>Revenue exceptions documented; estimates proposed for unintegrated gaps</li><li>Revenue subledger locked; JEs created systemically</li></ul></div>
+<div class="tx-cell tx-cell-systems"><ul><li>Source JEs auto-post to NetSuite (post sign-off)</li><li>Estimate JEs reviewed and posted</li><li>Revenue flux review opens (MoM, vs F/B, by product)</li></ul></div>
+<div class="tx-cell tx-cell-systems"><ul><li>Numeric pulls posted revenue JEs for review</li><li>Flux-driven JEs prepped and posted by EOD</li></ul></div>
+<div class="tx-cell tx-cell-systems"><ul><li>Deferred revenue, AR, and contract liability recs finalised in Numeric</li></ul></div>
+<div class="tx-cell tx-cell-systems"><ul><li>Period locked</li><li>Revenue workpapers archived</li></ul></div>
 
 <div class="tx-lane-label tx-ai">AI</div>
-<div class="tx-cell tx-cell-ai"><ul><li>Analytical layer above subledger and Ramp data</li><li>Anomaly monitoring on revenue and spend</li><li>Daily/weekly insight: revenue by product, spend by category</li></ul></div>
-<div class="tx-cell tx-cell-ai"><ul><li>Orchestrates the close &mdash; kicks off workflow</li><li>Messages accountant and FP&amp;A; runs checklist</li><li>Analytical tooling to support estimates and accruals</li></ul></div>
-<div class="tx-cell tx-cell-ai"><ul><li>Drafts flux commentary across revenue and expense</li><li>Initial revenue and spend cuts for stakeholders</li><li>Auto-notifies controller on material JEs</li></ul></div>
-<div class="tx-cell tx-cell-ai"><ul><li>Continued orchestration: reminders, status</li><li>Continued flux drafting across full P&amp;L</li><li>Drafts indirect cash flow statement</li></ul></div>
-<div class="tx-cell tx-cell-ai"><ul><li>Drafts balance sheet commentary</li><li>Drafts management reporting cut</li></ul></div>
-<div class="tx-cell tx-cell-ai"><ul><li>Final completeness and exception sweep</li><li>Documents post-close feedback for next period</li></ul></div>
+<div class="tx-cell tx-cell-ai"><ul><li>Analytical layer above subledger (not in the match path)</li><li>Anomaly monitoring on revenue volumes and values</li><li>Daily/weekly insight: revenue by product</li></ul></div>
+<div class="tx-cell tx-cell-ai"><ul><li>Orchestrates revenue close &mdash; kicks off workflow</li><li>Messages accountant; runs revenue checklist</li><li>Analytical tooling to support human estimates</li></ul></div>
+<div class="tx-cell tx-cell-ai"><ul><li>Drafts revenue flux commentary on large/unusual items</li><li>Initial revenue cut for stakeholders</li><li>Auto-notifies controller on material revenue JEs</li></ul></div>
+<div class="tx-cell tx-cell-ai"><ul><li>Continued orchestration: reminders, status</li><li>Continued revenue flux drafting</li></ul></div>
+<div class="tx-cell tx-cell-ai"><ul><li>Drafts deferred revenue and AR commentary</li><li>Drafts revenue management reporting cut</li></ul></div>
+<div class="tx-cell tx-cell-ai"><ul><li>Final revenue completeness and exception sweep</li><li>Documents post-close feedback for next period</li></ul></div>
 
 <div class="tx-lane-label tx-human">Human</div>
-<div class="tx-cell tx-cell-human"><ul><li>Light-touch on close plumbing</li><li>Business partnering &mdash; surfacing insight from live revenue and spend data</li><li>Continuous process improvement (rules, taxonomy)</li><li>Steps in only on AI escalation</li></ul></div>
-<div class="tx-cell tx-cell-human"><ul><li><span class="tx-role">Sr accountant:</span> runs orchestrated workflow on revenue, escalates unusual items; signs off cash rec</li><li><span class="tx-role">Controller:</span> sense-checks high-level KPIs, early signal to wider team</li></ul></div>
-<div class="tx-cell tx-cell-human"><ul><li><span class="tx-role">Sr accountant:</span> reviews/approves revenue estimate JEs, works flagged revenue flux</li><li><span class="tx-role">FP&amp;A:</span> picks up expense accrual review (handoff)</li><li><span class="tx-role">Controller:</span> owns variance narrative, pressure-tests AI calls</li></ul></div>
-<div class="tx-cell tx-cell-human"><ul><li><span class="tx-role">Sr accountant:</span> clears revenue Numeric queue, evidence, flux JEs</li><li><span class="tx-role">FP&amp;A:</span> expense flux narrative, budget-owner engagement</li><li><span class="tx-role">Controller:</span> signs off recs and approves flux JEs; reviews AI-drafted CFS; shapes close package</li></ul></div>
-<div class="tx-cell tx-cell-human"><ul><li><span class="tx-role">Sr accountant:</span> revenue BS recs, evidence in Numeric</li><li><span class="tx-role">FP&amp;A:</span> completes expense flux commentary</li><li><span class="tx-role">Controller:</span> edits BS commentary, budget-holder conversations, MR review</li></ul></div>
+<div class="tx-cell tx-cell-human"><ul><li>Light-touch on revenue close plumbing</li><li>Business partnering &mdash; surfacing revenue insight to wider org</li><li>Continuous improvement of crosswalk and exception rules</li><li>Steps in only on AI escalation</li></ul></div>
+<div class="tx-cell tx-cell-human"><ul><li><span class="tx-role">Sr accountant:</span> runs orchestrated revenue workflow, escalates unusual items</li><li><span class="tx-role">Controller:</span> sense-checks revenue KPIs, early signal on top-line</li></ul></div>
+<div class="tx-cell tx-cell-human"><ul><li><span class="tx-role">Sr accountant:</span> reviews/approves revenue estimate JEs, works flagged flux</li><li><span class="tx-role">Controller:</span> owns revenue variance narrative, pressure-tests AI calls</li></ul></div>
+<div class="tx-cell tx-cell-human"><ul><li><span class="tx-role">Sr accountant:</span> clears Numeric queue, evidence, flux JEs</li><li><span class="tx-role">Controller:</span> signs off recs, approves flux JEs, shapes revenue close package</li></ul></div>
+<div class="tx-cell tx-cell-human"><ul><li><span class="tx-role">Sr accountant:</span> finalises deferred revenue and AR recs, evidence in Numeric</li><li><span class="tx-role">Controller:</span> edits revenue commentary, MR review</li></ul></div>
 <div class="tx-cell tx-cell-human"><ul><li><span class="tx-role">Controller:</span> period sign-off &mdash; the assertion AI doesn&rsquo;t make</li><li>Joint post-close retro and actions</li><li><span class="tx-role">Sr accountant:</span> archive completeness check</li></ul></div>
 </div>
 
@@ -132,11 +128,7 @@ html, body {
 <div class="tx-leg-item"><span class="tx-leg-dot" style="background:#534AB7"></span>AI &mdash; orchestration, drafting, analytics</div>
 <div class="tx-leg-item"><span class="tx-leg-dot" style="background:#BA7517"></span>Human &mdash; judgment, sign-off, business partnering</div>
 </div>
-<div class="tx-foot">
-<p><span class="tx-foot-label">Outside the 5-day critical path:</span> payroll JEs (post mid-month following calc and approval); stock-based compensation (external admin schedule); monthly tax provision stub with quarterly true-up; cap table and equity activity (event-driven). Each follows its own cadence and is reflected in GL ahead of period close.</p>
-<p><span class="tx-foot-label">Automated upstream of the close:</span> depreciation and fixed asset roll-forward, prepaid amortization, lease accounting (ASC 842), FX translation where applicable. These flow as scheduled JEs through the pre-close ingest with exception-only human review.</p>
-<p><span class="tx-foot-label">Conditional on entity structure:</span> consolidation and intercompany eliminations would layer in on Days 2&ndash;3 (Systems-led, Controller review) where the operating model includes multiple legal entities.</p>
-</div>
+<p class="tx-foot">Scope: revenue reconciliation workflow only. Other close streams &mdash; expense accruals, payroll, balance sheet items outside the revenue cycle, consolidation &mdash; sit alongside on the same calendar but are out of scope for this design. The same orchestration pattern generalises.</p>
 </div>
 
 </div>
